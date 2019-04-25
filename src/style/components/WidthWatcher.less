@@ -1,0 +1,24 @@
+.container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .watcher-parent{
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        overflow: auto;
+        visibility: hidden;
+        .watcher-child{
+            height: 1px;
+        }
+        &.decrease{
+            .watcher-child{
+                width: 250%;
+            }
+        }
+    }
+}
