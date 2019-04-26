@@ -8,45 +8,47 @@ class SwiperContainer extends Component {
         this.handleDown = this.handleDown.bind(this)
         this.handleMove = this.handleMove.bind(this)
         this.handleUp = this.handleUp.bind(this)
-        this.handleTansitionend = this.handleTansitionend.bind(this)
     }
     state = {
-        hasDown: false,
-        page: 0,
-        startX: null,
-        pointX: 0,
-        canStart: true
+        hasDown: false,     //是否处于点击中状态
+        page: 0,            //当前页数
+        startX: null,       //点击位置和时间
+        translateX: 0,      //整体位移距离
     }
+    //开始点击
     handleDown(e) {
-        if(this.state.canStart){
-            this.setState({
-                hasDown: true,
-                startX: {
-                    x: e.clientX,
-                    time: new Date().getTime()
-                }
-            })
-        }
+        const { clientX } = e.type.match('touch') ? e.touches[0] : e
+        this.setState({
+            hasDown: true,
+            startX: {
+                x: clientX,
+                time: new Date().getTime()
+            }
+        })
     }
+    //拖动
     handleMove(e) {
         if(this.state.hasDown){
+            const { clientX } = e.type.match('touch') ? e.touches[0] : e
             const { width, images: { length } } = this.props
             const nowX = -this.state.page * width
-            let moveX = e.clientX - this.state.startX.x
+            let moveX = clientX - this.state.startX.x
             if((nowX === 0 && moveX > 0) || (nowX === (length - 1) * (-width) && moveX < 0)){
                 moveX /= 10
             }
             this.setState({
-                pointX: nowX + moveX
+                translateX: nowX + moveX
             })
             e.stopPropagation()
         }
     }
+    //松开
     handleUp(e) {
         if(this.state.hasDown){
+            const { clientX } = e.type.match('touch') ? e.changedTouches[0] : e
             const { width, images: {length} } = this.props
             let { startX: { time, x }, page } = this.state
-            const moveX = e.clientX - x
+            const moveX = clientX - x
             const left = moveX % width
             if(new Date().getTime() - time < 300 && Math.abs(moveX) > 100){
                 moveX > 0 ? page--: page++
@@ -64,37 +66,54 @@ class SwiperContainer extends Component {
                 hasDown: false,
                 startX: null,
                 page,
-                pointX: -page * width,
-                canStart: false
+                translateX: -page * width
             })
         }
     }
-    handleTansitionend() {
-        this.setState({
-            canStart: true
-        })
+    //阻止图片拖动
+    handleDrap(e) {
+        e.preventDefault()
+    }
+    //页面宽度改变
+    componentWillReceiveProps(newProps) {
+        const newW = newProps.width
+        const oldW = this.props.width
+        if(newW !== oldW){
+            this.setState({
+                translateX: -this.state.page * newW
+            })
+        }
     }
     componentDidMount() {
         window.addEventListener('mousemove', this.handleMove)
         window.addEventListener('mouseup', this.handleUp)
+        window.addEventListener('touchmove', this.handleMove)
+        window.addEventListener('touchend', this.handleUp)
     }
     componentWillUnmount() {
         window.removeEventListener('mousemove', this.handleMove)
         window.removeEventListener('mouseup', this.handleUp)
+        window.removeEventListener('touchmove', this.handleMove)
+        window.removeEventListener('touchend', this.handleUp)
     }
     render() {
         const { width, images } = this.props
         return (
-            <div className="swiper-container" style={{height: width}}>
+            <div
+                className="swiper-container"
+                style={{height: width}}
+                onMouseDown={this.handleDown}
+                onTouchStart={this.handleDown}
+            >
                 <ul
                     className="swiper-wrapper"
                     style={{
                         width: `${width * images.length}px`,
-                        transform: `translateX(${this.state.pointX}px)`,
+                        transform: `translateX(${this.state.translateX}px)`,
                         transitionDuration: this.state.hasDown ? '0s' : '.3s',
                         willChange: `${this.state.hasDown ? 'transform' : ''}`
                     }}
-                    onTransitionEnd={this.handleTansitionend}
+                    onMouseDown={this.handleDrap}
                 >
                 {
                     images.map((item, index) => (
@@ -107,11 +126,10 @@ class SwiperContainer extends Component {
                 <ul className="promo-nav">
                 {
                     images.map((item, index) => (
-                        <li className={this.state.page == index ? 'active' : ''} key={index}></li>
+                        <li className={this.state.page === index ? 'active' : ''} key={index}></li>
                     ))
                 }    
                 </ul>
-                <div className="mask" onMouseDown={this.handleDown}></div>
             </div>
         )
     }

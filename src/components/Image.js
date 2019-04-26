@@ -11,39 +11,26 @@ class Images extends Component {
         loadding: true
     }
     handleLoad() {
-        const { src, alt } = this.props
-        const img = this.img
-        img.src = src
-        img.alt = alt
-        img.onload = () => {
-            this.setState({loadding: false})
-        }
+        this.setState({loadding: false})
     }
     handleError() {
 
     }
-    componentDidMount() {
-        const img = new Image()
-        this.setState({img})
-        img.src = this.props.src
-        img.onload = this.handleLoad
-        img.onerror = this.handleError
-    }
-    componentWillUnmount() {
-        const { img } = this.state
-        img.onload = null
-        img.onerror = null
-    }
     render() {
         const { loadding } = this.state
+        const { src, alt } = this.props
         return (
-            <div className="image">
+            <div className="component-image">
                 {loadding && <span className="icon-heart heartbeat"></span>}
                 <img
                     style={{
                         visibility: `${loadding ? 'hidden' : ''}`
                     }}
-                    ref={ref => this.img = ref}/>
+                    src={src}
+                    alt={alt}
+                    onLoad={this.handleLoad}
+                    onError={this.handleError}
+                />
             </div>
         )
     }
