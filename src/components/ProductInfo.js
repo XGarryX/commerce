@@ -9,8 +9,8 @@ class ProductInfo extends Component {
             <ul className="product-info">
             {
                 images.map(item => (
-                    <li>
-                        <Image src={item} alt={item} key={item}/>
+                    <li key={item}>
+                        <Image src={item} alt={item}/>
                     </li>
                 ))
             }

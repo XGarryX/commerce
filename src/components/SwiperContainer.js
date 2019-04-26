@@ -17,6 +17,7 @@ class SwiperContainer extends Component {
     }
     //开始点击
     handleDown(e) {
+        e.preventDefault();
         const { clientX } = e.type.match('touch') ? e.touches[0] : e
         this.setState({
             hasDown: true,
