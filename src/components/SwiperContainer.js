@@ -28,6 +28,7 @@ class SwiperContainer extends Component {
     }
     //拖动
     handleMove(e) {
+        e.preventDefault()
         if(this.state.hasDown){
             const { clientX } = e.type.match('touch') ? e.touches[0] : e
             const { width, images: { length } } = this.props
@@ -40,7 +41,6 @@ class SwiperContainer extends Component {
                 translateX: nowX + moveX
             })
             e.stopPropagation()
-            e.preventDefault()
         }
     }
     //松开
@@ -52,7 +52,7 @@ class SwiperContainer extends Component {
             let { startX: { time, x }, page } = this.state
             const moveX = clientX - x
             const left = moveX % width
-            if(new Date().getTime() - time < 300 && Math.abs(moveX) > 100){
+            if(new Date().getTime() - time < 300 && Math.abs(moveX) > 50){
                 moveX > 0 ? page--: page++
             }else{
                 page -= parseInt(moveX / width)
