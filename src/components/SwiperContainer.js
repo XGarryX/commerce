@@ -28,6 +28,7 @@ class SwiperContainer extends Component {
     }
     //拖动
     handleMove(e) {
+        e.stopPropagation()
         if(this.state.hasDown){
             const { clientX } = e.type.match('touch') ? e.touches[0] : e
             const { width, images: { length } } = this.props
@@ -39,11 +40,11 @@ class SwiperContainer extends Component {
             this.setState({
                 translateX: nowX + moveX
             })
-            e.stopPropagation()
         }
     }
     //松开
     handleUp(e) {
+        e.preventDefault()
         if(this.state.hasDown){
             const { clientX } = e.type.match('touch') ? e.changedTouches[0] : e
             const { width, images: {length} } = this.props
