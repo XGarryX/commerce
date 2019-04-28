@@ -68,7 +68,7 @@ class App extends Component {
   　　　　return actualTop
     　　}
         const emlTop = getElmTop(elm)
-        const parent = document.documentElement.scrollTop += 1 && document.documentElement.scrollTop ? document.documentElement : document.body
+        const parent = (document.documentElement.scrollTop += 1) && document.documentElement.scrollTop ? document.documentElement : document.body
         const step = (emlTop - parent.scrollTop) / 10
         requestAnimationFrame(function move(){
           if(Math.abs(parent.scrollTop - emlTop) < 10){
