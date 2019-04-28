@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Image from './Image'
+import WidthWatcher from './WidthWatcher'
 import '../style/components/SwiperContainer.less'
 
 class SwiperContainer extends Component {
@@ -28,13 +29,13 @@ class SwiperContainer extends Component {
     }
     //拖动
     handleMove(e) {
-        e.preventDefault()
         if(this.state.hasDown){
+            const { contnetWidth, page, startX: { x } } = this.state
             const { clientX } = e.type.match('touch') ? e.touches[0] : e
-            const { width, images: { length } } = this.props
-            const nowX = -this.state.page * width
-            let moveX = clientX - this.state.startX.x
-            if((nowX === 0 && moveX > 0) || (nowX === (length - 1) * (-width) && moveX < 0)){
+            const { images: { length } } = this.props
+            const nowX = -page * contnetWidth
+            let moveX = clientX - x
+            if((nowX === 0 && moveX > 0) || (nowX === (length - 1) * (-contnetWidth) && moveX < 0)){
                 moveX /= 10
             }
             this.setState({
@@ -45,18 +46,17 @@ class SwiperContainer extends Component {
     }
     //松开
     handleUp(e) {
-        e.preventDefault()
         if(this.state.hasDown){
             const { clientX } = e.type.match('touch') ? e.changedTouches[0] : e
-            const { width, images: {length} } = this.props
-            let { startX: { time, x }, page } = this.state
+            const { images: {length} } = this.props
+            let { contnetWidth, startX: { time, x }, page } = this.state
             const moveX = clientX - x
-            const left = moveX % width
+            const left = moveX % contnetWidth
             if(new Date().getTime() - time < 300 && Math.abs(moveX) > 50){
                 moveX > 0 ? page--: page++
             }else{
-                page -= parseInt(moveX / width)
-                if(Math.abs(left) > width / 2){
+                page -= parseInt(moveX / contnetWidth)
+                if(Math.abs(left) > contnetWidth / 2){
                     left > 0 ?
                         page > 0 && page-- :
                         page < length - 1 && page++
@@ -68,7 +68,7 @@ class SwiperContainer extends Component {
                 hasDown: false,
                 startX: null,
                 page,
-                translateX: -page * width
+                translateX: -page * contnetWidth
             })
         }
     }
@@ -76,15 +76,12 @@ class SwiperContainer extends Component {
     handleDrap(e) {
         e.preventDefault()
     }
-    //页面宽度改变
-    componentWillReceiveProps(newProps) {
-        const newW = newProps.width
-        const oldW = this.props.width
-        if(newW !== oldW){
-            this.setState({
-                translateX: -this.state.page * newW
-            })
-        }
+    //父级宽度改变
+    handleResize(contnetWidth) {
+        this.setState({
+            contnetWidth,
+            translateX: -this.state.page * contnetWidth
+        })
     }
     componentDidMount() {
         window.addEventListener('mousemove', this.handleMove)
@@ -99,18 +96,19 @@ class SwiperContainer extends Component {
         window.removeEventListener('touchend', this.handleUp)
     }
     render() {
-        const { width, images } = this.props
+        const { images } = this.props
+        const { contnetWidth } = this.state
         return (
             <div
                 className="swiper-container"
-                style={{height: width}}
+                style={{height: contnetWidth}}
                 onMouseDown={this.handleDown}
                 onTouchStart={this.handleDown}
             >
                 <ul
                     className="swiper-wrapper"
                     style={{
-                        width: `${width * images.length}px`,
+                        width: `${contnetWidth * images.length}px`,
                         transform: `translateX(${this.state.translateX}px)`,
                         transitionDuration: this.state.hasDown ? '0s' : '.3s',
                         willChange: `${this.state.hasDown ? 'transform' : ''}`
@@ -119,7 +117,7 @@ class SwiperContainer extends Component {
                 >
                 {
                     images.map((item, index) => (
-                        <li className="swiper-slide" key={index} style={{width, lineHeight: `${width}px`}}>
+                        <li className="swiper-slide" key={index} style={{width: `${contnetWidth}px`, lineHeight: `${contnetWidth}px`}}>
                             <Image src={item} alt={index}/>
                         </li>
                     ))
@@ -132,6 +130,7 @@ class SwiperContainer extends Component {
                     ))
                 }    
                 </ul>
+                <WidthWatcher handleResize={this.handleResize.bind(this)} />
             </div>
         )
     }

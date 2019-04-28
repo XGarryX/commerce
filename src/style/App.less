@@ -5,12 +5,14 @@
   background-size: cover;
   background-attachment: fixed;
   background-color: #3D000F;
-  overflow-y: auto;
   .content{
     @color: rgba(255, 255, 255, .15);
-    max-width: 700px;
+    @footerHeight: 50px;
+    @maxwidth: 700px;
+    max-width: @maxwidth;
     margin: 0 auto;
     background-color: @color;
+    padding-bottom: @footerHeight;
     header{
       padding: 15px 25px;
       border-bottom: 1px solid @color;
@@ -23,6 +25,63 @@
     .block{
       margin: 3% 2% 0 2%;
       padding-bottom: 2%;
+      .order-title{
+        line-height: 40px;
+        padding: 0 10px;
+        background: #666;
+        color: #FFF;
+        [class^="icon-"], [class*=" icon-"] {
+          vertical-align: middle;
+          margin-right: 8px;
+          font-size: 28px;
+        }
+        h2{
+          vertical-align: middle;
+          display: inline-block;
+          margin: 0;
+          font-size: 21px;
+          font-weight: 400;
+        }
+      }
+      .rollingBoard{
+        height: 100px;
+      }
+      article{
+        color: #FFF;
+        line-height: 35px;
+        p{
+          margin: 0;
+        }
+      }
+    }
+    footer{
+      position: fixed;
+      width: 100%;
+      max-width: @maxwidth;
+      bottom: 0;
+      line-height: @footerHeight;
+      color: #FFF;
+      background: #EE3300;
+      & > *{
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+      }
+      & > *:not(:last-child){
+        border-right: 1px dotted #FFF;
+        box-sizing: border-box;
+      }
+      .toTop{
+        width: 15%;
+        i{
+          position: absolute;
+          margin-left: .5ex;
+          margin-top: .5ex;
+        }
+      }
+      .toBuy, .inquiry{
+        width: 42.5%;
+      }
     }
   }
 }
