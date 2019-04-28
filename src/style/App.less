@@ -58,12 +58,15 @@
       position: fixed;
       width: 100%;
       max-width: @maxwidth;
-      bottom: 0;
+      height: @footerHeight;
       line-height: @footerHeight;
+      bottom: 0;
       color: #FFF;
       background: #EE3300;
       & > *{
+        vertical-align: top;
         display: inline-block;
+        height: 100%;
         text-align: center;
         cursor: pointer;
       }
@@ -72,12 +75,10 @@
         box-sizing: border-box;
       }
       .toTop{
+        @topHeight: 10px;
         width: 15%;
-        i{
-          position: absolute;
-          margin-left: .5ex;
-          margin-top: .5ex;
-        }
+        line-height: @topHeight;
+        padding: (@footerHeight - 2 * @topHeight) / 4;
       }
       .toBuy, .inquiry{
         width: 42.5%;

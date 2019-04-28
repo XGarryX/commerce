@@ -133,7 +133,7 @@ class App extends Component {
           </div>
           <footer>
             <div className="toTop" onClick={() => this.toHash("#root")}>
-              <i className="icon-chevron-thin-up"></i>
+              <i className="icon-chevron-thin-up"></i><br />
               top
             </div>
             <div className="toBuy" onClick={() => this.toHash("#order")}>
