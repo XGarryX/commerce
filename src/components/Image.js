@@ -8,21 +8,29 @@ class Images extends Component {
         this.handleError = this.handleError.bind(this)
     }
     state = {
-        loadding: true
+        loadding: true,
+        hasError: false
     }
     handleLoad() {
+        const { onLoad } = this.props
         this.setState({loadding: false})
+        onLoad && onLoad()
     }
     handleError() {
-
+        const { onError } = this.props
+        this.setState({
+            loadding: false,
+            hasError: true
+        })
+        onError && onError()
     }
     render() {
-        const { loadding } = this.state
+        const { loadding, hasError } = this.state
         const { src, alt } = this.props
         return (
             <div className="component-image">
                 {loadding && <span className="icon-heart heartbeat"></span>}
-                <img
+                {!hasError && <img
                     style={{
                         visibility: `${loadding ? 'hidden' : ''}`
                     }}
@@ -30,7 +38,12 @@ class Images extends Component {
                     alt={alt}
                     onLoad={this.handleLoad}
                     onError={this.handleError}
-                />
+                />}
+                {hasError && <p className="errTips">
+                    <span className="icon-mood_bad"></span>
+                    <span>抱歉，该图片无法显示</span>
+                </p>
+                }
             </div>
         )
     }
