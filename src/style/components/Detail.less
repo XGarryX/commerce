@@ -52,10 +52,10 @@
     .service{
         @size: 20px;
         line-height: @size;
-        span{
+        & > span{
             font-size: 15px;
             margin-right: 15px;
-            &:before{
+            span{
                 display: inline-block;
                 width: @size;
                 height: @size;
@@ -64,16 +64,10 @@
                 color: #FFF;
                 text-align: center;
             }
-        }
-        .freePostage{      
-            &:before{
-                content: '邮';
+            &.freePostage span {
                 background: #5d5d5d;
             }
-        }
-        .cash{      
-            &:before{
-                content: '货';
+            &.cash span {
                 background: #ff0707;
             }
         }

@@ -2,8 +2,27 @@ import React, { Component } from 'react'
 import '../style/components/Detail.less'
 
 class Detail extends Component {
+    state = {
+        offer: ['freePost', 'isCash', ]
+    }
+    renderOffer(type) {
+        const { cash, freePost } = this.props
+        switch(type){
+            case 'freePost':
+                return (<span className="freePostage" key="freePost">
+                    <span>{freePost.keyWord}</span>
+                    {freePost.inner}
+                </span>)
+            case 'isCash':
+                return (<span className="cash" key="isCash">
+                    <span>{cash.keyWord}</span>
+                    {cash.inner}
+                </span>)
+        }
+    }
     render() {
-        const { originalPrice, currentPrice, unit, discount, sold, title } = this.props
+        const { offer } = this.state
+        const { originalPrice, currentPrice, unit, discount, sold, soldText, title, price, buyNow, handleClick } = this.props
         return (
             <div className="details-all">
                 <ul className="price">
@@ -13,25 +32,26 @@ class Detail extends Component {
                     </li>
                     <li className="other">
                         <div className="originalPrice">
-                            <span>原价:</span>
+                            <span>{price}:</span>
                             <del>
                                 <span>{unit}</span>
                                 <span> {originalPrice}</span>
                             </del>
                         </div>
                         <div className="discount">{discount}</div>
-                        <div className="sold">已售:{sold}</div>
+                        <div className="sold">{soldText}:{sold}</div>
                     </li>
                 </ul>
                 <div className="details-title">
                     <h2>{title}</h2>
                 </div>
                 <div className="service">
-                    <span className="freePostage">免邮费</span>
-                    <span className="cash">货到付款</span>
+                {
+                    offer.map(item => this.renderOffer(item))        
+                }
                 </div>
                 <div className="buy-now">
-                    <button>立即购买</button>
+                    <button onClick={handleClick}>{buyNow}</button>
                 </div>
             </div>
         )

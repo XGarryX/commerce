@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import Title from './components/Title'
 import SwiperContainer from './components/SwiperContainer'
 import Detail from './components/Detail'
 import ProductInfo from './components/ProductInfo'
 import RollingBoard from './components/RollingBoard'
+import { titles, detailText, footer } from './config/traditional'
 import './style/App.less'
 import './style/icon.less'
 
 class App extends Component {
   state = {
+    loadding: true,
     title: 'LED瓶塞燈【一組三入】',
     images: [
       'http://us.meibolikeji.com/photos/20190115/1547522640485.jpg-cn',
@@ -24,7 +27,6 @@ class App extends Component {
     detail: {
       originalPrice: "1580",
       currentPrice: "780",
-      unit: "NT$",
       discount: "-51%",
       sold: 986,
     },
@@ -83,40 +85,65 @@ class App extends Component {
       window.location.replace(hash)
     }
   }
+  hideLoading() {
+    this.loadding.style.opacity = "0"
+    this.loadding.addEventListener('transitionend', () => {
+      this.setState({
+        loadding: false
+      })
+    })
+  }
+  componentDidMount() {
+    // axios.get('http://localhost:8081/api/business/product/info/01b598d2aba34568abc938b725738936')
+    //   .then(({data}) => {
+    //     this.setState({
+    //       data
+    //     }, this.hideLoading)
+    //   })
+    //   .catch(err => console.log(err))
+    setTimeout(() => this.hideLoading(), 500)
+  }
   render() {
-    const { title, images, detail, productInfo, orderList } = this.state
+    const { title, images, detail, productInfo, orderList, loadding } = this.state
     return (
       <div className="app">
+        {loadding && <div className="loading-cover" ref={ref => this.loadding = ref}>
+          <div className="loading-block">
+            <span className="icon-heart heartbeat"></span>
+            <h2>Loading...</h2>
+          </div>
+          <span className="middler"></span>
+        </div>}
         <div className="content">
           <header>
             <h1 className="header-title">{title}</h1>
           </header>
           <div className="block">
-            <Title title="商品图片" />
+            <Title title={titles.productPic} />
             <SwiperContainer images={images}/>
           </div>
-          <div className="block" id="order">
-            <Title title="限时下杀" />
-            <Detail {...detail} title={title} />
+          <div className="block">
+            <Title title={titles.detail} />
+            <Detail {...detail} title={title} {...detailText} handleClick={() => this.toHash("#order")}/>
           </div>
           <div className="block">
-            <Title title="商品属性" />
+            <Title title={titles.attributes} />
             <ProductInfo images={productInfo} />
           </div>
-          <div className="block">
-            <Title title="订单信息" />
+          <div className="block" id="order">
+            <Title title={titles.orderInfo} />
             <div className="order-title">
               <i className="icon-shopping-cart"></i>
               <h2>{title}</h2>
             </div>
             <div className="order-title">
               <i className="icon-cart-plus"></i>
-              <h2>最新订单</h2>
+              <h2>{titles.newOrders}</h2>
             </div>
             <RollingBoard style={{height: '250px'}} orderList={orderList}/>
           </div>
           <div className="block">
-            <Title title="用户须知" />
+            <Title title={titles.notice} />
             <article>
               <p className="node-text">本產品的實際使用效果根據個人情況決定，不保證每位用戶都能享受到所宣傳的效果。若有疑問請諮詢在線客服或通過電子郵箱聯絡我們，本公司享有最終解釋權。</p>
               <p className="node-title">·關於發貨方式</p>
@@ -137,9 +164,9 @@ class App extends Component {
               top
             </div>
             <div className="toBuy" onClick={() => this.toHash("#order")}>
-              立即下单
+              {footer.buyNow}
             </div>
-            <div className="inquiry">订单查询</div>
+            <div className="inquiry">{footer.order}</div>
           </footer>
         </div>
       </div>
