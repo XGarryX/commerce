@@ -41,8 +41,10 @@
       }
     }
     .block{
-      margin: 3% 2% 0 2%;
-      padding-bottom: 2%;
+      margin: 3% 2% 2% 2%;
+      &.text-block{
+        background: #FFF;
+      }
       .order-title{
         line-height: 40px;
         padding: 0 10px;
@@ -63,6 +65,14 @@
       }
       .rollingBoard{
         height: 100px;
+      }
+      .innerText{
+        width: 100%;
+        overflow-x: hidden;
+        img{
+          width: 100% !important;
+          height: 100% !important;
+        }
       }
       article{
         color: #FFF;

@@ -3,7 +3,7 @@ import '../style/components/RollingBoard.less'
 
 class RollingBoard extends Component {
     render() {
-        const { orderList, style } = this.props
+        const { orderList = [], style } = this.props
         return (
             <div className="rolling-board" style={style}>
                 <div className="board-content">

@@ -38,7 +38,7 @@ class Detail extends Component {
                                 <span> {originalPrice}</span>
                             </del>
                         </div>
-                        <div className="discount">{discount}</div>
+                        <div className="discount">-{discount}%</div>
                         <div className="sold">{soldText}:{sold}</div>
                     </li>
                 </ul>
