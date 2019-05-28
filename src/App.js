@@ -3,16 +3,61 @@ import axios from 'axios'
 import Title from './components/Title'
 import SwiperContainer from './components/SwiperContainer'
 import Detail from './components/Detail'
-import ProductInfo from './components/ProductInfo'
+import Attrs from './components/Attrs'
 import RollingBoard from './components/RollingBoard'
 import { titles, detailText, footer, notice } from './config/traditional'
 import './style/App.less'
 import './style/icon.less'
 
+const attrs = {
+  "matchVos" : [{
+    "matchOne":[{
+      "name":"颜色",
+      "value": "红"
+    }, {
+      "name":"大小",
+      "value": "L"
+    }, {
+      "name": "类型",
+      "value": "圆领" 
+    }]
+  }, {
+    "matchOne":[{
+      "name":"颜色",
+      "value": "绿"
+    }, {
+      "name":"大小",
+      "value": "XL"
+    }, {
+      "name": "类型",
+      "value": "V领" 
+    }]
+  }]
+}
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleAttrChoice = this.handleAttrChoice.bind(this)
+    this.handleInfoChange = this.handleInfoChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
   state = {
     loadding: true,
-    hasFail: false
+    hasFail: false,
+    info: {
+      count: 1,
+      name: '',
+      phone: '',
+      area: '',
+      address: '',
+      Email: '',
+      message: ''
+    }
+  }
+  handleSubmit() {
+    console.log(this.state)
   }
   toHash(hash) {
     if(requestAnimationFrame){
@@ -43,6 +88,23 @@ class App extends Component {
       window.location.replace(hash)
     }
   }
+  handleAttrChoice(attr, value) {
+    const { info, info: { selection = {} } } = this.state
+    info.selection = Object.assign(selection, {
+      [attr]: value
+    })
+    this.setState({
+      info
+    })
+  }
+  handleInfoChange(name, value) {
+    const { info } = this.state
+    this.setState({
+      info: Object.assign(info, {
+        [name]: value
+      })
+    })
+  }
   hideLoading() {
     this.loadding.style.opacity = "0"
     this.loadding.addEventListener('transitionend', () => {
@@ -57,9 +119,19 @@ class App extends Component {
         this.setState(data, this.hideLoading)
       })
       .catch(err => this.setState({hasFail: true}))
+      let obj = {}
+      attrs.matchVos.forEach(({matchOne}) => {
+        matchOne.forEach(({name, value}) => {
+          let attr = obj[name] = obj[name] || []
+          attr.push(value)
+        })
+      })
+      this.setState({
+        attrs: obj
+      })
   }
   render() {
-    const { loadding, hasFail, name, more, price } = this.state
+    const { loadding, hasFail, name, more, price, attrs, info } = this.state
     const discount = 20
     return (
       <div className="app">
@@ -84,7 +156,7 @@ class App extends Component {
               title={name}
               {...detailText}
               currentPrice={price}
-              originalPrice={price * (100 - discount) / 100}
+              originalPrice={price / ((100 - discount) * 0.01)}
               sold={99}
               discount={discount}
               handleClick={() => this.toHash("#order")}
@@ -100,6 +172,14 @@ class App extends Component {
               <i className="icon-shopping-cart"></i>
               <h2>{name}</h2>
             </div>
+            <Attrs
+              attrs={attrs}
+              handleAttrChoice={this.handleAttrChoice}
+              handleInfoChange={this.handleInfoChange}
+              info={info}
+              price={info.count * price}
+              handleSubmit={this.handleSubmit}
+            />
             <div className="order-title">
               <i className="icon-cart-plus"></i>
               <h2>{titles.newOrders}</h2>

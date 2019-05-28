@@ -11,16 +11,20 @@ export const detailText = {
     price: '原價',
     soldText: '已售',
     unit: 'NT$',
-    freePost: {
-        keyWord: '郵',
-        inner: '免郵費',
-    },
-    cash: {
-        keyWord: '貨',
-        inner: '貨到付款',
-    },
     buyNow: '立即購買',
 }
+
+export const freePost = {
+    keyWord: '郵',
+    inner: '免郵費',
+}
+
+export const cash = {
+    keyWord: '貨',
+    inner: '貨到付款',
+    advantage: '選擇貨到付款，全台灣免運費，安全放心'
+}
+
 export const product = {
     selection: '商品選擇',
     color: '顔色',
@@ -55,4 +59,32 @@ export const notice = `
 export const footer = {
     buyNow: '立即下單',
     order: '訂單查詢'
+}
+
+export const attrs = {
+    priceL: '金額NT$',
+    countL: '數量',
+    nameL: {
+        title: '姓名',
+        placeholder: '請輸入您的姓名'
+    },
+    phoneL: {
+        title: '聯絡電話',
+        placeholder: '請輸入您的手機號碼'
+    },
+    aeraL: '地區',
+    addressL: {
+        title: '詳細地址',
+        placeholder: 'xx市xx區xx路xx號'
+    },
+    EmailL: {
+        title: 'E-mail',
+        placeholder: '填寫常用的郵箱'
+    },
+    messageL: {
+        title: '留言',
+        placeholder: '如有額外需求請留言'
+    },
+    payWayL: '付款方式',
+    submitL: '確認提交'
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { cash, freePost } from '../config/traditional'
 import '../style/components/Detail.less'
 
 class Detail extends Component {
@@ -6,7 +7,6 @@ class Detail extends Component {
         offer: ['freePost', 'isCash', ]
     }
     renderOffer(type) {
-        const { cash, freePost } = this.props
         switch(type){
             case 'freePost':
                 return (<span className="freePostage" key="freePost">
