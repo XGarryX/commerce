@@ -45,7 +45,7 @@ class App extends Component {
   }
   state = {
     loadding: true,
-    hasFail: false,
+    failMsg: null,
     info: {
       count: 1,
       name: '',
@@ -114,11 +114,17 @@ class App extends Component {
     })
   }
   componentDidMount() {
-    axios.get('http://localhost:8081/api/business/product/info/01b598d2aba34568abc938b725738936')
+    const id = window.location.pathname.split('/')[1]
+    axios.get(`http://localhost:8081/api/business/product/info/${id}`)
       .then(({data}) => {
+        if(data.resultCode != "200") {
+          throw({message: data.resultMessage})
+        }
         this.setState(data, this.hideLoading)
       })
-      .catch(err => this.setState({hasFail: true}))
+      .catch(({message}) => this.setState({
+          failMsg: message
+        }))
       let obj = {}
       attrs.matchVos.forEach(({matchOne}) => {
         matchOne.forEach(({name, value}) => {
@@ -131,14 +137,15 @@ class App extends Component {
       })
   }
   render() {
-    const { loadding, hasFail, name, more, price, attrs, info } = this.state
+    const { loadding, failMsg, name, more = {}, price, attrs, info } = this.state
+    const { bannerImgs = '', details = {} } = more
     const discount = 20
     return (
       <div className="app">
         {loadding && <div className="loading-cover" ref={ref => this.loadding = ref}>
           <div className="loading-block">
             <span className="icon-heart heartbeat"></span>
-            <h2>{hasFail ? 'fail' : 'Loading...'}</h2>
+            <h2>{failMsg || 'Loading...'}</h2>
           </div>
           <span className="middler"></span>
         </div>}
@@ -148,7 +155,7 @@ class App extends Component {
           </header>
           <div className="block">
             <Title title={titles.productPic} />
-            <SwiperContainer images={more.bannerImgs.split(",")}/>
+            <SwiperContainer images={bannerImgs.split(",")}/>
           </div>
           <div className="block">
             <Title title={titles.detail} />
@@ -164,7 +171,7 @@ class App extends Component {
           </div>
           <div className="block text-block">
             <Title title={titles.attributes} />
-            <div className="innerText" dangerouslySetInnerHTML={{__html: more.details.text.replace(/\<\simg/g, "<img")}}></div>
+            <div className="innerText" dangerouslySetInnerHTML={{__html: details.text && details.text.replace(/\<\simg/g, "<img")}}></div>
           </div>
           <div className="block" id="order">
             <Title title={titles.orderInfo} />
