@@ -32,8 +32,7 @@ class Attrs extends Component {
         }
     }
     render() {
-        const { price, attrs, info, handleInfoChange, handleAttrChoice, handleSubmit } = this.props
-        const keys = Object.keys(attrs)
+        const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit } = this.props
         const { priceL, countL, nameL, phoneL, aeraL, addressL, EmailL, messageL, payWayL, submitL } = language
         const infoConfig = [{
             name: 'price',
@@ -84,18 +83,18 @@ class Attrs extends Component {
             <div className="attrs-block">
                 <div className="attrs-inner"> 
                     {
-                        keys.map((key, index) => (
-                            <div className="attrs-item" key={index}>
-                                <label className="attr-name must">{key}</label>
+                        attrs.map(({attrName, attrValues, id}) => (
+                            <div className="attrs-item" key={id}>
+                                <label className="attr-name must">{attrName}</label>
                                 <div className="attrs-values">
                                 {
-                                    attrs[key].map((item, index) => (
+                                    attrValues.map(attr => (
                                         <span
-                                            key={index}
-                                            onClick={() => handleAttrChoice && handleAttrChoice(key, item)}
-                                            className={`attr-value${info.selection && info.selection[key] == item ? ' active' : ''}`}
+                                            key={attr.id}
+                                            onClick={() => handleAttrChoice && handleAttrChoice(id, attr.id)}
+                                            className={`attr-value${info.selection && info.selection[id] == attr.id ? ' active' : ''}`}
                                         >
-                                            {item}
+                                            {attr.name}
                                         </span>
                                     ))
                                 }

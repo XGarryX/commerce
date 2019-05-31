@@ -9,32 +9,6 @@ import { titles, detailText, footer, notice } from './config/traditional'
 import './style/App.less'
 import './style/icon.less'
 
-const attrs = {
-  "matchVos" : [{
-    "matchOne":[{
-      "name":"颜色",
-      "value": "红"
-    }, {
-      "name":"大小",
-      "value": "L"
-    }, {
-      "name": "类型",
-      "value": "圆领" 
-    }]
-  }, {
-    "matchOne":[{
-      "name":"颜色",
-      "value": "绿"
-    }, {
-      "name":"大小",
-      "value": "XL"
-    }, {
-      "name": "类型",
-      "value": "V领" 
-    }]
-  }]
-}
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -54,7 +28,26 @@ class App extends Component {
       address: '',
       Email: '',
       message: ''
-    }
+    },
+    orderList: [{
+      name: '趙 **（089***6851）',
+      time: 8,
+    }, {
+      name: '張 **（089***3590） ',
+      time: 3,
+    }, {
+      name: '李 **（087***3943） ',
+      time: 4,
+    }, {
+      name: '王 **（099***4865） ',
+      time: 11,
+    }, {
+      name: '林 **（062***3291） ',
+      time: 14,
+    }, {
+      name: '鄭 **（098***6851） ',
+      time: 1,
+    },],
   }
   handleSubmit() {
     console.log(this.state)
@@ -113,6 +106,27 @@ class App extends Component {
       })
     })
   }
+  setSpec(spec) {
+    let attrsObj = {}
+    let attrs = []
+    spec.forEach(({name, id, value, nameVo}) => {
+        let attr = attrsObj[name]
+        if(!attr){
+            attr = attrsObj[name] = {
+                attrName: name,
+                id: nameVo.id,
+                must: false,
+                attrValues: []
+            }
+            attrs.push(attr)
+        }
+        attr.attrValues.push({
+            id,
+            name: value
+        })
+    })
+    return attrs
+  }
   componentDidMount() {
     const id = window.location.pathname.split('/')[1]
     axios.get(`http://localhost:8081/api/business/product/info/${id}`)
@@ -120,24 +134,15 @@ class App extends Component {
         if(data.resultCode != "200") {
           throw({message: data.resultMessage})
         }
+        data.attrs = this.setSpec(data.spec)
         this.setState(data, this.hideLoading)
       })
       .catch(({message}) => this.setState({
           failMsg: message
         }))
-      let obj = {}
-      attrs.matchVos.forEach(({matchOne}) => {
-        matchOne.forEach(({name, value}) => {
-          let attr = obj[name] = obj[name] || []
-          attr.push(value)
-        })
-      })
-      this.setState({
-        attrs: obj
-      })
   }
   render() {
-    const { loadding, failMsg, name, more = {}, price, attrs, info } = this.state
+    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList } = this.state
     const { bannerImgs = '', details = {} } = more
     const discount = 20
     return (
@@ -191,7 +196,7 @@ class App extends Component {
               <i className="icon-cart-plus"></i>
               <h2>{titles.newOrders}</h2>
             </div>
-            <RollingBoard style={{height: '250px'}} />
+            <RollingBoard style={{height: '250px'}} orderList={orderList} name={name} />
           </div>
           <div className="block">
             <Title title={titles.notice} />

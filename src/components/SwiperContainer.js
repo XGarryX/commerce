@@ -3,6 +3,8 @@ import Image from './Image'
 import WidthWatcher from './WidthWatcher'
 import '../style/components/SwiperContainer.less'
 
+const imgPath = 'http://image.garry.fun/'
+
 class SwiperContainer extends Component {
     constructor(props) {
         super(props)
@@ -118,7 +120,7 @@ class SwiperContainer extends Component {
                 {
                     images.map((item, index) => (
                         <li className="swiper-slide" key={index} style={{width: `${contnetWidth}px`, lineHeight: `${contnetWidth}px`}}>
-                            <Image src={item} alt={index}/>
+                            <Image src={imgPath + item.replace('\\.', '.')} alt={index}/>
                         </li>
                     ))
                 }
