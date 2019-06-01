@@ -6,6 +6,7 @@ import Detail from './components/Detail'
 import Attrs from './components/Attrs'
 import RollingBoard from './components/RollingBoard'
 import { titles, detailText, footer, notice } from './config/traditional'
+import { apiPath } from './config/api'
 import message from './public/message'
 import './style/App.less'
 import './style/icon.less'
@@ -102,7 +103,7 @@ class App extends Component {
       productMatchId
     }]
     const msgCb = message('购买中..')
-    axios.post(`http://localhost:8082/api/business/order/buy`, params)
+    axios.post(`${apiPath}/business/order/buy`, params)
       .then(({data}) => {
         if(data && data.resultCode != "200") {
           throw({message: data.resultMessage})
@@ -193,7 +194,7 @@ class App extends Component {
   }
   componentDidMount() {
     const id = window.location.pathname.split('/')[1]
-    axios.get(`http://localhost:8082/api/business/product/info/${id}`)
+    axios.get(`${apiPath}/business/product/info/${id}`)
       .then(({data}) => {
         if(data.resultCode != "200") {
           throw({message: data.resultMessage})
