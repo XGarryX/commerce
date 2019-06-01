@@ -6,6 +6,7 @@ import Detail from './components/Detail'
 import Attrs from './components/Attrs'
 import RollingBoard from './components/RollingBoard'
 import { titles, detailText, footer, notice } from './config/traditional'
+import message from './public/message'
 import './style/App.less'
 import './style/icon.less'
 
@@ -50,7 +51,69 @@ class App extends Component {
     },],
   }
   handleSubmit() {
-    console.log(this.state)
+    const { info, matchs } = this.state
+    const productId = window.location.pathname.split('/')[1]
+    let idArr = Object.values(info.selection || {})
+    let params = {}
+    let productMatchId = null
+    if(!productId) return
+    const paramsCheck = [{
+      name: 'phone', must: true, msg: '请填写手机'
+    }, {
+      name: 'name', must: true, msg: '请填写姓名'
+    }, {
+      name: 'email', must: false
+    }, {
+      name: 'mark', must: false
+    }] 
+    for(let i = 0;i < matchs.length;i++){
+      const {id, matchOne} = matchs[i]
+      const res = matchOne.filter(({specificationMatchId}) => {
+        return idArr.includes(specificationMatchId)
+      })
+      if(res.length == idArr.length && res.length == matchOne.length){
+        productMatchId = id
+        break
+      }
+    }
+    if (!productMatchId && matchs.length > 0) {
+      message('请选择产品参数')(1000)
+      return
+    }
+    for(let i = 0;i < paramsCheck.length;i++){
+      const { name, must, msg } = paramsCheck[i]
+      const value = info[name]
+      if(!value && must){
+        message(msg)(1000)
+        return
+      }
+      params[name] = value
+    }
+    if(!info.address) {
+      message('请填写地址')(1000)
+      return
+    }
+    params.addressVo = {
+      addressInfo: info.address
+    }
+    params.products = [{
+      productId,
+      count: info.count,
+      productMatchId
+    }]
+    const msgCb = message('购买中..')
+    axios.post(`http://localhost:8082/api/business/order/buy`, params)
+      .then(({data}) => {
+        if(data && data.resultCode != "200") {
+          throw({message: data.resultMessage})
+        }
+        msgCb(0)
+        message('购买成功')(1000, () => window.location.reload())
+      })
+      .catch(err => {
+        msgCb(0)
+        message(err.message)(1000, () => window.location.reload())
+      })
   }
   toHash(hash) {
     if(requestAnimationFrame){
@@ -109,27 +172,28 @@ class App extends Component {
   setSpec(spec) {
     let attrsObj = {}
     let attrs = []
-    spec.forEach(({name, id, value, nameVo}) => {
-        let attr = attrsObj[name]
+    spec.forEach(({specificationNameId, specificationValueId, id, name, value}) => {
+        let attr = attrsObj[specificationNameId]
         if(!attr){
-            attr = attrsObj[name] = {
+            attr = attrsObj[specificationNameId] = {
                 attrName: name,
-                id: nameVo.id,
+                specificationNameId,
                 must: false,
                 attrValues: []
             }
             attrs.push(attr)
         }
         attr.attrValues.push({
-            id,
-            name: value
+          id,
+          specificationValueId,
+          value
         })
     })
     return attrs
   }
   componentDidMount() {
     const id = window.location.pathname.split('/')[1]
-    axios.get(`http://localhost:8081/api/business/product/info/${id}`)
+    axios.get(`http://localhost:8082/api/business/product/info/${id}`)
       .then(({data}) => {
         if(data.resultCode != "200") {
           throw({message: data.resultMessage})
@@ -142,7 +206,7 @@ class App extends Component {
         }))
   }
   render() {
-    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList } = this.state
+    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList, matchs } = this.state
     const { bannerImgs = '', details = {} } = more
     const discount = 20
     return (

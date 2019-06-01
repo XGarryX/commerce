@@ -57,6 +57,9 @@ class Attrs extends Component {
         }, {
             name: 'area',
             title: aeraL,
+            render: () => (<select>
+                <option value="taiwan">台湾</option>
+            </select>),
             must: true
         }, {
             name: 'address',
@@ -64,12 +67,12 @@ class Attrs extends Component {
             placeholder: addressL.placeholder,
             must: true
         }, {
-            name: 'Email',
+            name: 'email',
             title: EmailL.title,
             placeholder: EmailL.placeholder,
             must: false
         }, {
-            name: 'message',
+            name: 'mark',
             title: messageL.title,
             placeholder: messageL.placeholder,
             must: false
@@ -83,18 +86,18 @@ class Attrs extends Component {
             <div className="attrs-block">
                 <div className="attrs-inner"> 
                     {
-                        attrs.map(({attrName, attrValues, id}) => (
-                            <div className="attrs-item" key={id}>
+                        attrs.map(({attrName, attrValues, specificationNameId}) => (
+                            <div className="attrs-item" key={specificationNameId}>
                                 <label className="attr-name must">{attrName}</label>
                                 <div className="attrs-values">
                                 {
-                                    attrValues.map(attr => (
+                                    attrValues.map(({specificationValueId, value, id}) => (
                                         <span
-                                            key={attr.id}
-                                            onClick={() => handleAttrChoice && handleAttrChoice(id, attr.id)}
-                                            className={`attr-value${info.selection && info.selection[id] == attr.id ? ' active' : ''}`}
+                                            key={specificationValueId}
+                                            onClick={() => handleAttrChoice && handleAttrChoice(specificationNameId, id)}
+                                            className={`attr-value${info.selection && info.selection[specificationNameId] == id ? ' active' : ''}`}
                                         >
-                                            {attr.name}
+                                            {value}
                                         </span>
                                     ))
                                 }
