@@ -77,6 +77,10 @@ export const attrs = {
         title: '詳細地址',
         placeholder: 'xx市xx區xx路xx號'
     },
+    zipCodeL: {
+        title: '郵編',
+        placeholder: '填寫郵編'
+    },
     EmailL: {
         title: 'E-mail',
         placeholder: '填寫常用的郵箱'

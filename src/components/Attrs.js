@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Counter from './Counter'
 import { attrs as language } from '../config/traditional'
 import { cash } from '../config/traditional'
+import langList from '../config/lang'
 import '../style/components/Attrs.less'
 
 class Attrs extends Component {
@@ -33,12 +34,12 @@ class Attrs extends Component {
     }
     render() {
         const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit } = this.props
-        const { priceL, countL, nameL, phoneL, aeraL, addressL, EmailL, messageL, payWayL, submitL } = language
+        const { priceL, countL, nameL, phoneL, aeraL, addressL, zipCodeL, EmailL, messageL, payWayL, submitL } = language
         const infoConfig = [{
             name: 'price',
             title: priceL,
             must: true,
-            render: () => <span>{price}</span>
+            render: () => <span>{price / 100}</span>
         }, {
             name: 'count',
             title: countL,
@@ -55,10 +56,10 @@ class Attrs extends Component {
             placeholder: phoneL.placeholder,
             must: true,
         }, {
-            name: 'area',
+            name: 'lang',
             title: aeraL,
-            render: () => (<select>
-                <option value="taiwan">台湾</option>
+            render: lang => (<select>
+                <option value={lang}>{langList[lang]}</option>
             </select>),
             must: true
         }, {
@@ -66,6 +67,11 @@ class Attrs extends Component {
             title: addressL.title,
             placeholder: addressL.placeholder,
             must: true
+        }, {
+            name: 'zipCode',
+            title: zipCodeL.title,
+            placeholder: zipCodeL.placeholder,
+            must: false
         }, {
             name: 'email',
             title: EmailL.title,

@@ -28,14 +28,14 @@ class Detail extends Component {
                 <ul className="price">
                     <li className="current-price">
                         <span className="unit">{unit}</span>
-                        <span className="currentPrice">{currentPrice}</span>
+                        <span className="currentPrice">{currentPrice / 100}</span>
                     </li>
                     <li className="other">
                         <div className="originalPrice">
                             <span>{price}:</span>
                             <del>
                                 <span>{unit}</span>
-                                <span> {originalPrice}</span>
+                                <span> {originalPrice / 100}</span>
                             </del>
                         </div>
                         <div className="discount">-{discount}%</div>

@@ -26,7 +26,7 @@ class Images extends Component {
     }
     render() {
         const { loadding, hasError } = this.state
-        const { src, alt } = this.props
+        const { src, alt, error } = this.props
         return (
             <div className="component-image">
                 {loadding && <span className="icon-heart heartbeat"></span>}
@@ -41,7 +41,7 @@ class Images extends Component {
                 />}
                 {hasError && <p className="errTips">
                     <span className="icon-mood_bad"></span>
-                    <span>抱歉，该图片无法显示</span>
+                    <span>{error == undefined ? '抱歉，该图片无法显示' : error}</span>
                 </p>
                 }
             </div>

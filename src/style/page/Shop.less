@@ -1,0 +1,146 @@
+@keyframes ld-heartbeat {
+    0%, 60% {
+        transform: scale(1.05);
+    }
+    5% {
+        transform: scale(1.25);
+    }
+    39% {
+        transform: scale(.9);
+    }
+    45% {
+        transform: scale(1.15);
+    }
+    to {
+        transform: scale(1);
+    }
+  }
+  
+  .app{
+    width: 100%;
+    height: 100%;
+    background: url(../../static/image/bg.jpg) no-repeat center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: #3D000F;
+    overflow-y: auto;
+    .content{
+      @color: rgba(255, 255, 255, .15);
+      @footerHeight: 50px;
+      @maxwidth: 700px;
+      max-width: @maxwidth;
+      margin: 0 auto;
+      background-color: @color;
+      padding-bottom: @footerHeight;
+      header{
+        padding: 15px 25px;
+        border-bottom: 1px solid @color;
+        .header-title{
+          margin: 0;
+          font-size: 20px;
+          color: #FFF;
+        }
+      }
+      .block{
+        margin: 3% 2% 2% 2%;
+        &.text-block{
+          background: #FFF;
+        }
+        .order-title{
+          line-height: 40px;
+          padding: 0 10px;
+          background: #666;
+          color: #FFF;
+          [class^="icon-"], [class*=" icon-"] {
+            vertical-align: middle;
+            margin-right: 8px;
+            font-size: 28px;
+          }
+          h2{
+            vertical-align: middle;
+            display: inline-block;
+            margin: 0;
+            font-size: 21px;
+            font-weight: 400;
+          }
+        }
+        .rollingBoard{
+          height: 100px;
+        }
+        .innerText{
+          width: 100%;
+          overflow-x: hidden;
+          img{
+            width: 100% !important;
+            height: 100% !important;
+          }
+        }
+        article{
+          color: #FFF;
+          line-height: 35px;
+          p{
+            margin: 0;
+          }
+        }
+      }
+      footer{
+        position: fixed;
+        width: 100%;
+        max-width: @maxwidth;
+        height: @footerHeight;
+        line-height: @footerHeight;
+        bottom: 0;
+        color: #FFF;
+        background: #EE3300;
+        & > *{
+          vertical-align: top;
+          display: inline-block;
+          height: 100%;
+          text-align: center;
+          cursor: pointer;
+        }
+        & > *:not(:last-child){
+          border-right: 1px dotted #FFF;
+          box-sizing: border-box;
+        }
+        .toTop{
+          @topHeight: 10px;
+          width: 15%;
+          line-height: @topHeight;
+          padding: (@footerHeight - 2 * @topHeight) / 4;
+        }
+        .toBuy, .inquiry{
+          width: 42.5%;
+        }
+      }
+    }
+    .loading-cover{
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #FFF;
+      text-align: center;
+      transition: all .5s;
+      z-index: 999;
+      .loading-block{
+        display: inline-block;
+        vertical-align: middle;
+        .heartbeat{
+          display: inline-block;
+          font-size: 45px;
+          color: #ff0000;
+          animation: ld-heartbeat .8s infinite cubic-bezier(.215,.61,.355,1);
+        }
+        h2{
+          color: #898989;
+        }
+      }
+      .middler{
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+      }
+    }
+  }
