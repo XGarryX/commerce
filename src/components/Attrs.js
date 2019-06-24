@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Counter from './Counter'
 import { attrs as language } from '../config/traditional'
 import { cash } from '../config/traditional'
-import langList from '../config/lang'
+import { langTable } from '../config/lang'
 import '../style/components/Attrs.less'
 
 class Attrs extends Component {
@@ -33,7 +33,7 @@ class Attrs extends Component {
         }
     }
     render() {
-        const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit } = this.props
+        const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit, lang } = this.props
         const { priceL, countL, nameL, phoneL, aeraL, addressL, zipCodeL, EmailL, messageL, payWayL, submitL } = language
         const infoConfig = [{
             name: 'price',
@@ -58,9 +58,7 @@ class Attrs extends Component {
         }, {
             name: 'lang',
             title: aeraL,
-            render: lang => (<select>
-                <option value={lang}>{langList[lang]}</option>
-            </select>),
+            render: () => <select><option value={lang}>{langTable[lang]}</option></select>,
             must: true
         }, {
             name: 'address',

@@ -53,10 +53,10 @@ class Shop extends Component {
     },],
   }
   handleSubmit() {
-    const { info, matchs } = this.state
+    const { info, matchs, lang } = this.state
     const { id } = this.props.match.params
     let idArr = Object.values(info.selection || {})
-    let params = {}
+    let params = {lang}
     let productMatchId = null
     if(!id) return
     const paramsCheck = [{
@@ -132,7 +132,7 @@ class Shop extends Component {
   　　　　return actualTop
     　　}
         const emlTop = getElmTop(elm)
-        const parent = (document.documentElement.scrollTop += 1) && document.documentElement.scrollTop ? document.documentElement : document.body
+        const parent = document.body.querySelector('.app')
         const step = (emlTop - parent.scrollTop) / 10
         requestAnimationFrame(function move(){
           if(Math.abs(parent.scrollTop - emlTop) < 10){
@@ -212,7 +212,7 @@ class Shop extends Component {
         }))
   }
   render() {
-    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList, matchs } = this.state
+    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList, matchs, lang } = this.state
     const { bannerImgs = '', details = {} } = more
     const discount = 20
     return (
@@ -262,6 +262,7 @@ class Shop extends Component {
               info={info}
               price={info.count * price}
               handleSubmit={this.handleSubmit}
+              lang={lang}
             />
             <div className="order-title">
               <i className="icon-cart-plus"></i>
