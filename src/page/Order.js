@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import Image from '../components/Image'
 import orderStatus from '../config/orderStatus'
-import { apiPath } from '../config/api'
-import { searchTextL, orderInfiL } from '../config/orderLang'
+import {} from '../config/api'
+import { langTable } from '../config/lang'
+import { apiPath, imgPath } from '../config/api'
 import '../style/page/Order.less'
 
 class Order extends Component {
@@ -18,7 +19,7 @@ class Order extends Component {
             progress: '0%',
             isSearching: false,
             isLoading: false,
-            orderId: '1f035ef161684255bb40c87ea43bbc47',
+            orderId: '',
             data: []
         }
     }
@@ -31,10 +32,17 @@ class Order extends Component {
         const { orderId } = this.state
         if(orderId){
             axios.get(`${apiPath}/business/order/user/list?id=${orderId}`)
-            .then(({data: { list }}) => {
-                this.setState({
-                    isLoading: false,
-                    data: list
+            .then(function ({data = {}}) {
+                const { list = [{}] } = data
+                const [orderInfo = {}] = list
+                const { lang } = langTable[orderInfo.lang || ''] || {}
+                lang && import(`../language/${lang}/order.js`)
+                .then(language => {
+                    this.setState({
+                        isLoading: false,
+                        orderInfo,
+                        language
+                    })
                 })
             })
             this.setState({
@@ -49,7 +57,10 @@ class Order extends Component {
         })
     }
     componentDidMount() {
-        this.handleSearch()
+        const orderId = window.location.pathname.split('/')[2]
+        orderId && this.setState({
+            orderId
+        }, this.handleSearch)
     }
     render() {
         const { state } = this.state
@@ -64,16 +75,18 @@ class Order extends Component {
             key: 'name',
         }, {
             key: 'allPrice',
+            render: allPrice => allPrice / 100
         }]
-        const { isSearching, isLoading, data: [orderInfo = {}], orderId } = this.state
-        const { payStatus, more = {}, products = [{product:{}}] } = orderInfo
+        const { isSearching, isLoading, orderInfo = {}, orderId, language = {} } = this.state
+        const { orderInfiL } = language
+        const { payStatus, more = {}, products = [{product:{more:{}}}] } = orderInfo
         return(
             <div className="order">
                 <div className="order-search" style={{height: isSearching && '60px'}}>
                     <div className="search-bar">
-                        <button className="search-button" onClick={this.handleSearch}>{searchTextL}</button>
+                        <button className="search-button" onClick={this.handleSearch}>search</button>
                         <div className="search-box">
-                            <input className="search-input" placeholder="请输入订单号" value={orderId} onChange={this.handleIdChange} />
+                            <input className="search-input" placeholder="orderNumber" value={orderId} onChange={this.handleIdChange} />
                         </div>
                     </div>
                     <span className="fix-middle"></span>
@@ -97,7 +110,7 @@ class Order extends Component {
                     </div> */}
                     <div className="product">
                         <div className="product-img">
-                            <Image src="http://image.garry.fun/image/product/e5de04b20833409c9fe39b05d7be2d6b1553747017(1).jpg" error=""/>
+                            <Image src={imgPath + products[0].product.more.bannerImgs.replace('\\.', '.')} error=""/>
                         </div>
                         <div className="product-name">
                             <span className="name">{products[0].product.name}</span>
@@ -106,7 +119,7 @@ class Order extends Component {
                     </div>
                     <div className="order-detail">
                         <div className="detail-title">
-                            <h1 className="title-text">订单信息</h1>
+                            <h1 className="title-text">{orderInfiL.title}</h1>
                         </div>
                         <div className="detail-block">
                             {detail.map(({key, render}) => {

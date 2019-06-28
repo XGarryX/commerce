@@ -1,5 +1,17 @@
 export const langTable = {
-    'CN': '中国',
-    'CN-TW': '台湾',
-    'TH': '泰国'
+    'CN': {
+        key: 'CN',
+        name: '中国',
+        lang: 'traditional'
+    },
+    'CN-TW': {
+        key: 'CN-TW',
+        name: '臺灣',
+        lang: 'traditional'
+    },
+    'TH': {
+        key: 'TH',
+        name: 'ประเทศไทย',
+        lang: 'thailand'
+    }
 }

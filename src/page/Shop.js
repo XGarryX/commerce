@@ -5,7 +5,7 @@ import SwiperContainer from '../components/SwiperContainer'
 import Detail from '../components/Detail'
 import Attrs from '../components/Attrs'
 import RollingBoard from '../components/RollingBoard'
-import { titles, detailText, footer, notice } from '../config/traditional'
+import { langTable } from '../config/lang'
 import { apiPath } from '../config/api'
 import message from '../public/message'
 import '../style/page/Shop.less'
@@ -111,7 +111,7 @@ class Shop extends Component {
           throw({message: data.resultMessage})
         }
         msgCb(0)
-        message('购买成功')(1000, () => window.location.reload())
+        message('购买成功')(1000, () => window.location.href = `/order/${data.id}`)
       })
       .catch(err => {
         msgCb(0)
@@ -201,18 +201,23 @@ class Shop extends Component {
     const { id } = this.props.match.params
     axios.get(`${apiPath}/business/product/info/${id}`)
       .then(({data}) => {
+        const lang = langTable[data.lang].lang
         if(data.resultCode != "200") {
           throw({message: data.resultMessage})
         }
         data.attrs = this.setSpec(data.spec)
-        this.setState(data, this.hideLoading)
+        import(`../language/${lang}/shop.js`)
+        .then(language => {
+            this.setState(Object.assign(data, {language}), this.hideLoading)
+        })
       })
       .catch(({message}) => this.setState({
           failMsg: message
-        }))
+      }))
   }
   render() {
-    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList, matchs, lang } = this.state
+    const { loadding, failMsg, name, more = {}, price, attrs, info, orderList, lang, language = {} } = this.state
+    const { titles, detailText, footer, notice } = language
     const { bannerImgs = '', details = {} } = more
     const discount = 20
     return (
@@ -242,6 +247,7 @@ class Shop extends Component {
               originalPrice={price / ((100 - discount) * 0.01)}
               sold={99}
               discount={discount}
+              language={language}
               handleClick={() => this.toHash("#order")}
             />
           </div>
@@ -262,7 +268,8 @@ class Shop extends Component {
               info={info}
               price={info.count * price}
               handleSubmit={this.handleSubmit}
-              lang={lang}
+              lang={langTable[lang]}
+              language={language}
             />
             <div className="order-title">
               <i className="icon-cart-plus"></i>

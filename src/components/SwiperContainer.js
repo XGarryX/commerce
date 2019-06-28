@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import Image from './Image'
 import WidthWatcher from './WidthWatcher'
+import { imgPath } from '../config/api'
 import '../style/components/SwiperContainer.less'
-
-const imgPath = 'http://image.garry.fun/'
 
 class SwiperContainer extends Component {
     constructor(props) {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { cash, freePost } from '../config/traditional'
 import '../style/components/Detail.less'
 
 class Detail extends Component {
@@ -7,6 +6,8 @@ class Detail extends Component {
         offer: ['freePost', 'isCash', ]
     }
     renderOffer(type) {
+        const { language = {} } = this.props
+        const { cash, freePost } = language 
         switch(type){
             case 'freePost':
                 return (<span className="freePostage" key="freePost">
@@ -22,7 +23,8 @@ class Detail extends Component {
     }
     render() {
         const { offer } = this.state
-        const { originalPrice, currentPrice, unit, discount, sold, soldText, title, price, buyNow, handleClick } = this.props
+        const { originalPrice, currentPrice, unit, discount, sold, soldText, title, price, buyNow, handleClick, language = {} } = this.props
+        const { cash, freePost } = language
         return (
             <div className="details-all">
                 <ul className="price">

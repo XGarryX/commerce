@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import Counter from './Counter'
-import { attrs as language } from '../config/traditional'
-import { cash } from '../config/traditional'
-import { langTable } from '../config/lang'
 import '../style/components/Attrs.less'
 
 class Attrs extends Component {
@@ -24,17 +21,18 @@ class Attrs extends Component {
         count + 1 <= MAXCOUNT && handleInfoChange('count', count + 1)
     }
     renderPayWay(way) {
+        const { language = {cash: {}} } = this.props
         switch(way){
             case 'cash':
                 return(<div className="payway">
-                    <div className="payment-type">{cash.inner}</div>
-                    <div className="advantage">{cash.advantage}</div>
+                    <div className="payment-type">{language.cash.inner}</div>
+                    <div className="advantage">{language.cash.advantage}</div>
                 </div>)
         }
     }
     render() {
-        const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit, lang } = this.props
-        const { priceL, countL, nameL, phoneL, aeraL, addressL, zipCodeL, EmailL, messageL, payWayL, submitL } = language
+        const { price, attrs = [], info, handleInfoChange, handleAttrChoice, handleSubmit, lang, language = {attrs:{}} } = this.props
+        const { priceL, countL, nameL, phoneL, aeraL, addressL, zipCodeL, EmailL, messageL, payWayL, submitL } = language.attrs
         const infoConfig = [{
             name: 'price',
             title: priceL,
@@ -58,7 +56,7 @@ class Attrs extends Component {
         }, {
             name: 'lang',
             title: aeraL,
-            render: () => <select><option value={lang}>{langTable[lang]}</option></select>,
+            render: () => <select><option value={lang.key}>{lang.name}</option></select>,
             must: true
         }, {
             name: 'address',
