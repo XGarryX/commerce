@@ -110,7 +110,7 @@ class Order extends Component {
                     </div> */}
                     <div className="product">
                         <div className="product-img">
-                            <Image src={imgPath + orderInfo.product.more.bannerImgs.split(',')[0].replace('\\.', '.')} error=""/>
+                            <Image src={imgPath + products[0].product.more.bannerImgs.split(",")[0].replace('\\.', '.')} error=""/>
                         </div>
                         <div className="product-name">
                             <span className="name">{products[0].product.name}</span>
