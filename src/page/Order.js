@@ -32,7 +32,7 @@ class Order extends Component {
         const { orderId } = this.state
         if(orderId){
             axios.get(`${apiPath}/business/order/user/list?id=${orderId}`)
-            .then(function ({data = {}}) {
+            .then(({data = {}}) => {
                 const { list = [{}] } = data
                 const [orderInfo = {}] = list
                 const { lang } = langTable[orderInfo.lang || ''] || {}
