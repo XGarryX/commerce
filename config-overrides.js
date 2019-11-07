@@ -1,5 +1,6 @@
 const { override, fixBabelImports, addLessLoader } = require('customize-cra');
 process.env.GENERATE_SOURCEMAP = "false"
+process.env.PUBLIC_URL = "/shop/"
 
 module.exports = override(
     fixBabelImports('import', {
