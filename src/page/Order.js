@@ -80,7 +80,6 @@ class Order extends Component {
         const { isSearching, isLoading, orderInfo = {}, orderId, language = {} } = this.state
         const { orderInfiL } = language
         const { payStatus, more = {}, products = [{product:{more:{}}}] } = orderInfo
-        const Images = orderInfo.product.more.bannerImgs && imgPath + orderInfo.product.more.bannerImgs.split(',')[0].replace('\\.', '.')
         return(
             <div className="order">
                 <div className="order-search" style={{height: isSearching && '60px'}}>
@@ -111,7 +110,7 @@ class Order extends Component {
                     </div> */}
                     <div className="product">
                         <div className="product-img">
-                            <Image src={Images} error=""/>
+                            <Image src={imgPath + orderInfo.product.more.bannerImgs.split(',')[0].replace('\\.', '.')} error=""/>
                         </div>
                         <div className="product-name">
                             <span className="name">{products[0].product.name}</span>
