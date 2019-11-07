@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "babel-plugin-import": "^1.11.0",
-    "customize-cra": "^0.2.12",
+    "customize-cra": "^0.2.14",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "react-app-rewired": "^2.1.3"
