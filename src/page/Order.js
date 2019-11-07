@@ -79,8 +79,8 @@ class Order extends Component {
         }]
         const { isSearching, isLoading, orderInfo = {}, orderId, language = {} } = this.state
         const { orderInfiL } = language
-        const { payStatus, more = {}, products = [{product:{more:{bannerImgs}}}] } = orderInfo
-        const Images = bannerImgs && imgPath + bannerImgs.split(',')[0].replace('\\.', '.')
+        const { payStatus, more = {}, products = [{product:{more:{}}}] } = orderInfo
+        const Images = orderInfo.product.more.bannerImgs && imgPath + orderInfo.product.more.bannerImgs.split(',')[0].replace('\\.', '.')
         return(
             <div className="order">
                 <div className="order-search" style={{height: isSearching && '60px'}}>
